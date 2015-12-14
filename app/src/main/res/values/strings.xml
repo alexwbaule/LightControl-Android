@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Light Control</string>
+    <string name="stateoff">desligado</string>
+    <string name="stateon">ligado</string>
+</resources>
