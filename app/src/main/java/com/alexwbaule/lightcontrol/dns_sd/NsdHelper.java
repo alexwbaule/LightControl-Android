@@ -5,29 +5,27 @@ import android.net.nsd.NsdServiceInfo;
 import android.net.nsd.NsdManager;
 import android.util.Log;
 
-import java.util.ArrayList;
-
+import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
 import com.alexwbaule.lightcontrol.container.DeviceAddr;
 
 public class NsdHelper {
     Context mContext;
     NsdManager mNsdManager;
-    NsdManager.ResolveListener mResolveListener;
     NsdManager.DiscoveryListener mDiscoveryListener;
-    private ArrayList<DeviceAddr> serviceInfos;
+    private LoadNodesListener loadNodesListener;
+
 
     public static final String SERVICE_TYPE = "_light._tcp.";
     public static final String TAG = "NsdHelper";
 
-    public NsdHelper(Context context) {
+    public NsdHelper(Context context, LoadNodesListener loadNodesListener) {
         mContext = context;
+        this.loadNodesListener = loadNodesListener;
         mNsdManager = (NsdManager) context.getSystemService(Context.NSD_SERVICE);
     }
 
     public void initializeNsd() {
-        initializeResolveListener();
         initializeDiscoveryListener();
-        serviceInfos = new ArrayList<>();
     }
 
     public void initializeDiscoveryListener() {
@@ -42,7 +40,7 @@ public class NsdHelper {
             public void onServiceFound(NsdServiceInfo service) {
                 Log.d(TAG, "Service discovery success all: " + service);
                 if (service.getServiceType().equals(SERVICE_TYPE)) {
-                    mNsdManager.resolveService(service, mResolveListener);
+                    mNsdManager.resolveService(service, new MyResolveListener());
                 }
             }
 
@@ -54,6 +52,7 @@ public class NsdHelper {
             @Override
             public void onDiscoveryStopped(String serviceType) {
                 Log.i(TAG, "Discovery stopped: " + serviceType);
+                loadNodesListener.onStopDiscovery();
             }
 
             @Override
@@ -70,20 +69,17 @@ public class NsdHelper {
         };
     }
 
-    public void initializeResolveListener() {
-        mResolveListener = new NsdManager.ResolveListener() {
+    private class MyResolveListener implements NsdManager.ResolveListener {
+        @Override
+        public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
+            //your code
+        }
 
-            @Override
-            public void onResolveFailed(NsdServiceInfo serviceInfo, int errorCode) {
-                Log.e(TAG, "Resolve failed" + errorCode);
-            }
-
-            @Override
-            public void onServiceResolved(NsdServiceInfo serviceInfo) {
-                Log.e(TAG, "Resolve Succeeded. " + serviceInfo);
-                serviceInfos.add(new DeviceAddr(serviceInfo.getHost().getHostAddress(),serviceInfo.getPort()));
-            }
-        };
+        @Override
+        public void onServiceResolved(NsdServiceInfo serviceInfo) {
+            Log.d(TAG,"Service Discovered: " + serviceInfo.getServiceName() + " -> " + serviceInfo.getHost());
+            loadNodesListener.onDiscoveryNode(new DeviceAddr(serviceInfo.getServiceName(),serviceInfo.getHost().getHostAddress(),serviceInfo.getPort()));
+        }
     }
 
     public void discoverServices() {
@@ -92,9 +88,5 @@ public class NsdHelper {
 
     public void stopDiscovery() {
         mNsdManager.stopServiceDiscovery(mDiscoveryListener);
-    }
-
-    public ArrayList<DeviceAddr> getServiceList() {
-        return serviceInfos;
     }
 }

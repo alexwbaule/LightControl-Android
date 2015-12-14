@@ -40,11 +40,19 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
         holder.devstate.setChecked(lightContainer.isState());
         holder.devstate.setText(lightContainer.getStatename());
     }
-     public void reloadData(ArrayList<LightContainer> lc){
+
+    public void addData(LightContainer lightContainer){
+        Log.d("Adapter","Adicionando: " + lightContainer.getName() + " -> " + lightContainer.getAdrress());
+        if(!lightContainers.contains(lightContainer)) {
+            Log.d("Adapter","Nao existe entrada, adicionando.");
+            lightContainers.add(lightContainer);
+            notifyDataSetChanged();
+        }
+    }
+    public void cleanData(){
          lightContainers.clear();
-         lightContainers = lc;
          notifyDataSetChanged();
-     }
+    }
 
     @Override
     public int getItemCount() {

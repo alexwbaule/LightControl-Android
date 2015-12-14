@@ -3,6 +3,7 @@ package com.alexwbaule.lightcontrol;
 import android.app.Application;
 import android.util.Log;
 
+import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
 import com.alexwbaule.lightcontrol.dns_sd.NsdHelper;
 
 /**
@@ -11,7 +12,6 @@ import com.alexwbaule.lightcontrol.dns_sd.NsdHelper;
 public class LightControl extends Application {
     private static final String TAG = "LightControlApplication";
     private static LightControl instance = null;
-    public static NsdHelper mNsdHelper;
 
 
     public static LightControl getInstance() {
@@ -23,8 +23,6 @@ public class LightControl extends Application {
         super.onCreate();
         instance = this;
         Log.d(TAG, "LightControlApplication.onCreate()");
-        mNsdHelper = new NsdHelper(LightControl.getInstance());
-        mNsdHelper.initializeNsd();
     }
 
     @Override

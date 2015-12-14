@@ -6,42 +6,55 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import com.alexwbaule.lightcontrol.adapter.LightsAdapter;
 import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
+import com.alexwbaule.lightcontrol.container.DeviceAddr;
 import com.alexwbaule.lightcontrol.container.LightContainer;
+import com.alexwbaule.lightcontrol.dns_sd.NsdHelper;
+import com.alexwbaule.lightcontrol.tasks.FindNodes;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoadNodesListener {
     ArrayList<LightContainer> lightContainers;
+    public static NsdHelper mNsdHelper;
+    private LightsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mNsdHelper = new NsdHelper(LightControl.getInstance(), this);
+        mNsdHelper.initializeNsd();
         lightContainers = new ArrayList<>();
-        lightContainers.add(new LightContainer("Sala", "192.168.250.104", true));
-        lightContainers.add(new LightContainer("Sala 01", "192.168.250.104", false));
-        lightContainers.add(new LightContainer("Sala 02", "192.168.250.158", false));
-        lightContainers.add(new LightContainer("Sala 03", "192.168.250.154", false));
-
+        adapter = new LightsAdapter(LightControl.getInstance(), lightContainers);
         RecyclerView rw = (RecyclerView) findViewById(R.id.lights_list);
         rw.setLayoutManager(new LinearLayoutManager(this));
-        rw.setAdapter(new LightsAdapter(LightControl.getInstance(), lightContainers));
+        rw.setAdapter(adapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LightControl.mNsdHelper.discoverServices();
+        mNsdHelper.discoverServices();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        LightControl.mNsdHelper.stopDiscovery();
+        mNsdHelper.stopDiscovery();
+        adapter.cleanData();
     }
 
     @Override
-    public void onLoadNodesComplete(ArrayList<LightContainer> lgts) {
+    public void onLoadNodesComplete(LightContainer lgts) {
+        adapter.addData(lgts);
+    }
 
+    @Override
+    public void onDiscoveryNode(DeviceAddr deviceAddr) {
+        new FindNodes(this).execute(deviceAddr);
+    }
+
+    @Override
+    public void onStopDiscovery() {
     }
 }

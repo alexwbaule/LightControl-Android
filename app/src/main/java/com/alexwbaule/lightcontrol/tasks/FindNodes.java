@@ -2,17 +2,17 @@ package com.alexwbaule.lightcontrol.tasks;
 
 import android.os.AsyncTask;
 
+import com.alexwbaule.lightcontrol.callback.GetFromVolley;
 import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
+import com.alexwbaule.lightcontrol.container.DeviceAddr;
 import com.alexwbaule.lightcontrol.container.LightContainer;
 import com.alexwbaule.lightcontrol.network.VolleySingleton;
 import com.android.volley.RequestQueue;
 
-import java.util.ArrayList;
-
 /**
  * Created by alex on 13/12/15.
  */
-public class FindNodes extends AsyncTask<Void, Void, ArrayList<LightContainer>> {
+public class FindNodes extends AsyncTask<DeviceAddr, Void, LightContainer> {
     private LoadNodesListener loadNodesListener;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
@@ -24,12 +24,12 @@ public class FindNodes extends AsyncTask<Void, Void, ArrayList<LightContainer>> 
     }
 
     @Override
-    protected ArrayList<LightContainer> doInBackground(Void... params) {
-        return null;
+    protected LightContainer doInBackground(DeviceAddr... params) {
+        return GetFromVolley.loadallStatus(requestQueue, params[0]);
     }
 
     @Override
-    protected void onPostExecute(ArrayList<LightContainer> lightContainers) {
+    protected void onPostExecute(LightContainer lightContainers) {
         if(loadNodesListener != null){
             loadNodesListener.onLoadNodesComplete(lightContainers);
         }
