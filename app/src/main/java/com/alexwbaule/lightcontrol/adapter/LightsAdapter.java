@@ -12,18 +12,27 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import com.alexwbaule.lightcontrol.R;
+import com.alexwbaule.lightcontrol.callback.GetFromVolley;
+import com.alexwbaule.lightcontrol.callback.LoadLightResult;
 import com.alexwbaule.lightcontrol.container.LightContainer;
+import com.alexwbaule.lightcontrol.network.VolleySingleton;
+import com.alexwbaule.lightcontrol.tasks.ControlLights;
+import com.android.volley.RequestQueue;
 
 /**
  * Created by alex on 12/12/15.
  */
-public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsViewHolder> {
+public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsViewHolder> implements LoadLightResult{
     private final Context ctx;
     private ArrayList<LightContainer> lightContainers;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     public LightsAdapter(Context ctx, ArrayList<LightContainer> lightContainers) {
         this.ctx = ctx;
         this.lightContainers = lightContainers;
+        volleySingleton = VolleySingleton.getInstance();
+        requestQueue = volleySingleton.getRequestQueue();
     }
 
     @Override
@@ -34,11 +43,17 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     }
 
     @Override
-    public void onBindViewHolder(LightsAdapter.LightsViewHolder holder, int position) {
-        LightContainer lightContainer = lightContainers.get(position);
-        holder.devname.setText(lightContainer.getName());
+    public void onBindViewHolder(final LightsAdapter.LightsViewHolder holder, int position) {
+        final LightContainer lightContainer = lightContainers.get(position);
+        holder.devname.setText(lightContainer.getName() + " - " + lightContainer.getAdrress());
         holder.devstate.setChecked(lightContainer.isState());
         holder.devstate.setText(lightContainer.getStatename());
+        holder.devstate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ControlLights().execute(lightContainer);
+            }
+        });
     }
 
     public void addData(LightContainer lightContainer){
@@ -57,6 +72,11 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     @Override
     public int getItemCount() {
         return lightContainers.size();
+    }
+
+    @Override
+    public void onLightsOk(LightContainer lightContainers) {
+
     }
 
     public class LightsViewHolder extends RecyclerView.ViewHolder{
