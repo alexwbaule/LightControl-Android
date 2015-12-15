@@ -20,18 +20,23 @@ public class GetFromVolley {
         JSONObject response = Requestor.requestJSON(requestQueue, "http://" + devaddr.getIpAddr() + "/state");
         lightContainers = Parser.parseJSON(response, true);
         lightContainers.setUnique_name(devaddr.getName());
+        lightContainers.setAdrress(devaddr.getIpAddr());
         return lightContainers;
     }
-    public static LightContainer ligthOn(RequestQueue requestQueue,String ipaddr) {
+    public static LightContainer ligthOn(RequestQueue requestQueue, LightContainer devaddr) {
         LightContainer lightContainers;
-        JSONObject response = Requestor.requestJSON(requestQueue,  "http://" + ipaddr + "/state");
+        JSONObject response = Requestor.requestJSON(requestQueue,  "http://" + devaddr.getAdrress() + "/light/on");
         lightContainers = Parser.parseJSON(response, true);
+        lightContainers.setUnique_name(devaddr.getUnique_name());
+        lightContainers.setAdrress(devaddr.getAdrress());
         return lightContainers;
     }
-    public static LightContainer lightOff(RequestQueue requestQueue, String ipaddr) {
+    public static LightContainer lightOff(RequestQueue requestQueue, LightContainer devaddr) {
         LightContainer lightContainers;
-        JSONObject response = Requestor.requestJSON(requestQueue,  "http://" + ipaddr + "/state");
+        JSONObject response = Requestor.requestJSON(requestQueue,  "http://" + devaddr.getAdrress() + "/light/off");
         lightContainers = Parser.parseJSON(response, true);
+        lightContainers.setUnique_name(devaddr.getUnique_name());
+        lightContainers.setAdrress(devaddr.getAdrress());
         return lightContainers;
     }
 }
