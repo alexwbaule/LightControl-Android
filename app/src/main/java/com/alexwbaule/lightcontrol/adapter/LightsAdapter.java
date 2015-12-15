@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -48,6 +49,11 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
         holder.devname.setText(lightContainer.getName() + " - " + lightContainer.getAdrress());
         holder.devstate.setChecked(lightContainer.isState());
         holder.devstate.setText(lightContainer.getStatename());
+        if(lightContainer.isState()){
+            holder.light.setImageResource(R.drawable.light_bulb_on);
+        }else{
+            holder.light.setImageResource(R.drawable.light_bulb_off);
+        }
         holder.devstate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +63,7 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     }
 
     public void addData(LightContainer lightContainer){
-        Log.d("Adapter","Adicionando: " + lightContainer.getName() + " -> " + lightContainer.getAdrress());
+        Log.d("Adapter", "Adicionando: " + lightContainer.getName() + " -> " + lightContainer.getAdrress());
         if(!lightContainers.contains(lightContainer)) {
             Log.d("Adapter","Nao existe entrada, adicionando.");
             lightContainers.add(lightContainer);
@@ -82,11 +88,13 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     public class LightsViewHolder extends RecyclerView.ViewHolder{
         TextView devname;
         Switch devstate;
+        ImageView light;
 
         public LightsViewHolder(View itemView) {
             super(itemView);
             devname = (TextView) itemView.findViewById(R.id.devname);
             devstate = (Switch) itemView.findViewById(R.id.devstate);
+            light = (ImageView) itemView.findViewById(R.id.imageView);
         }
     }
 }

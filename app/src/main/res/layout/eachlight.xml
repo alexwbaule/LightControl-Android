@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageView"
-            android:src="@drawable/light_bulb" />
+            android:src="@drawable/light_bulb_off" />
 
         <TextView
             android:layout_width="wrap_content"
