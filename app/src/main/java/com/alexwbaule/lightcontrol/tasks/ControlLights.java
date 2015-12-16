@@ -2,12 +2,11 @@ package com.alexwbaule.lightcontrol.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.Switch;
 
+import com.alexwbaule.lightcontrol.Logger;
 import com.alexwbaule.lightcontrol.callback.GetFromVolley;
 import com.alexwbaule.lightcontrol.callback.LoadLightResult;
-import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
 import com.alexwbaule.lightcontrol.container.LightContainer;
 import com.alexwbaule.lightcontrol.network.VolleySingleton;
 import com.android.volley.RequestQueue;
@@ -16,23 +15,23 @@ import com.android.volley.RequestQueue;
  * Created by alex on 12/14/15.
  */
 public class ControlLights extends AsyncTask<LightContainer, Void, LightContainer> {
-    private View switcher;
+    private LoadLightResult loadLightResult;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    public static final String TAG = "FindNodes";
+    public static final String TAG = "ControlLights";
 
 
-    public ControlLights(View loadNodesListener) {
-        this.switcher = loadNodesListener;
+    public ControlLights(LoadLightResult loadNodesListener) {
+        this.loadLightResult = loadNodesListener;
         volleySingleton = VolleySingleton.getInstance();
         requestQueue = volleySingleton.getRequestQueue();
-        Log.d(TAG, "FindNodes Constructor");
+        Logger.log(TAG, "ControlLights Constructor");
     }
 
     public ControlLights() {
         volleySingleton = VolleySingleton.getInstance();
         requestQueue = volleySingleton.getRequestQueue();
-        Log.d(TAG, "FindNodes Constructor");
+        Logger.log(TAG, "ControlLights Constructor");
     }
 
     @Override
@@ -47,15 +46,9 @@ public class ControlLights extends AsyncTask<LightContainer, Void, LightContaine
 
     @Override
     protected void onPostExecute(final LightContainer lightContainers) {
-        if(switcher != null){
-            Log.e(TAG, "Ok, atualizando item");
-            switcher.post(new Runnable() {
-                @Override
-                public void run() {
-                    Switch l = (Switch) switcher;
-                    l.setText(lightContainers.getStatename());
-                }
-            });
+        if(loadLightResult != null){
+            Logger.log(TAG, "Ok, atualizando item");
+            loadLightResult.onLightsOk(lightContainers);
         }
     }
 }

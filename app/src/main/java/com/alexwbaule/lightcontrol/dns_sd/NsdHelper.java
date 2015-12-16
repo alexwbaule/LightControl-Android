@@ -5,6 +5,7 @@ import android.net.nsd.NsdServiceInfo;
 import android.net.nsd.NsdManager;
 import android.util.Log;
 
+import com.alexwbaule.lightcontrol.Logger;
 import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
 import com.alexwbaule.lightcontrol.container.DeviceAddr;
 
@@ -28,12 +29,12 @@ public class NsdHelper {
     private class MyDiscoveryListener implements NsdManager.DiscoveryListener{
         @Override
         public void onDiscoveryStarted(String regType) {
-            Log.d(TAG, "Service discovery started");
+            Logger.log(TAG, "Service discovery started");
         }
 
         @Override
         public void onServiceFound(NsdServiceInfo service) {
-            Log.d(TAG, "Service discovery success all: " + service);
+            Logger.log(TAG, "Service discovery success all: " + service);
             if (service.getServiceType().equals(SERVICE_TYPE)) {
                 mNsdManager.resolveService(service, new MyResolveListener());
             }
@@ -41,7 +42,7 @@ public class NsdHelper {
 
         @Override
         public void onServiceLost(NsdServiceInfo service) {
-            Log.e(TAG, "service lost" + service);
+            Logger.log(TAG, "service lost" + service);
         }
 
         @Override
@@ -52,13 +53,13 @@ public class NsdHelper {
 
         @Override
         public void onStartDiscoveryFailed(String serviceType, int errorCode) {
-            Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+            Logger.log(TAG, "Discovery failed: Error code:" + errorCode);
             mNsdManager.stopServiceDiscovery(this);
         }
 
         @Override
         public void onStopDiscoveryFailed(String serviceType, int errorCode) {
-            Log.e(TAG, "Discovery failed: Error code:" + errorCode);
+            Logger.log(TAG, "Discovery failed: Error code:" + errorCode);
             mNsdManager.stopServiceDiscovery(this);
         }
     }
@@ -72,7 +73,7 @@ public class NsdHelper {
         @Override
         public void onServiceResolved(NsdServiceInfo serviceInfo) {
             DeviceAddr deviceAddr = new DeviceAddr(serviceInfo.getServiceName(), serviceInfo.getHost().getHostAddress(), serviceInfo.getPort());
-            Log.d(TAG, "Service Discovered: " + serviceInfo.getServiceName() + " -> " + serviceInfo.getHost());
+            Logger.log(TAG, "Service Discovered: " + serviceInfo.getServiceName() + " -> " + serviceInfo.getHost());
             loadNodesListener.onDiscoveryNode(deviceAddr);
         }
     }

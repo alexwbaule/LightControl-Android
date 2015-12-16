@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Light Control</string>
-    <string name="stateoff">desligado</string>
-    <string name="stateon">ligado</string>
+    <string name="app_name">Wifi Light Control</string>
+    <string name="stateoff">off</string>
+    <string name="stateon">on</string>
 </resources>

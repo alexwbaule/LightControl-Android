@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -33,15 +32,21 @@ public class MainActivity extends AppCompatActivity implements LoadNodesListener
         mNsdHelper.discoverServices();
 
         lightContainers = new ArrayList<>();
-        adapter = new LightsAdapter(LightControl.getInstance(), lightContainers);
+        adapter = new LightsAdapter(LightControl.getInstance(), lightContainers, getFragmentManager());
         RecyclerView rw = (RecyclerView) findViewById(R.id.lights_list);
         rw.setLayoutManager(new LinearLayoutManager(this));
         rw.setAdapter(adapter);
+
 
         pgbar = (ProgressBar) findViewById(R.id.progressBar);
         pgbar.setIndeterminate(true);
         pgbar.setContentDescription("Carrregando Devices");
         pgbar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements LoadNodesListener
 
     @Override
     public void onDiscoveryNode(DeviceAddr deviceAddr) {
-        Log.e(TAG, "Device Discovered: " + deviceAddr.getName() + " -> " + deviceAddr.getIpAddr());
+        Logger.log(TAG, "Device Discovered: " + deviceAddr.getName() + " -> " + deviceAddr.getIpAddr());
         new FindNodes(this).execute(deviceAddr);
     }
 

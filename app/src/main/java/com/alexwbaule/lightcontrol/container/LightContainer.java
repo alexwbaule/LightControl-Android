@@ -60,6 +60,12 @@ public class LightContainer {
         }
     }
 
+    @Override
+    public String toString() {
+        return "unique_name: [" + unique_name + "] name: [" + name + "] addr: [" + adrress +
+                 "] statename : [" + statename + "] state: [" + state + "] config: [" + config + "]";
+    }
+
     public String getUnique_name() {
         return unique_name;
     }

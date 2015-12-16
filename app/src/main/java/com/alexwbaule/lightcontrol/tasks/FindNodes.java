@@ -3,6 +3,7 @@ package com.alexwbaule.lightcontrol.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.alexwbaule.lightcontrol.Logger;
 import com.alexwbaule.lightcontrol.callback.GetFromVolley;
 import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
 import com.alexwbaule.lightcontrol.container.DeviceAddr;
@@ -24,7 +25,7 @@ public class FindNodes extends AsyncTask<DeviceAddr, Void, LightContainer> {
         this.loadNodesListener = loadNodesListener;
         volleySingleton = VolleySingleton.getInstance();
         requestQueue = volleySingleton.getRequestQueue();
-        Log.d(TAG, "FindNodes Constructor");
+        Logger.log(TAG, "FindNodes Constructor");
 
     }
 
