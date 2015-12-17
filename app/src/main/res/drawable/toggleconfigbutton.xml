@@ -3,5 +3,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/light_config" android:state_checked="true"/>
     <item android:drawable="@drawable/light_config" android:state_checked="false"/>
+    <item android:drawable="@drawable/light_config_pressed" android:state_pressed="true"/>
     <item android:drawable="@drawable/light_config"/>
 </selector>

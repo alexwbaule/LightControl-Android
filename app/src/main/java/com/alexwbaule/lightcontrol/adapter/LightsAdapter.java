@@ -3,15 +3,12 @@ package com.alexwbaule.lightcontrol.adapter;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 import java.util.ArrayList;
 
@@ -39,7 +36,7 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
 
     @Override
     public LightsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View retView = LayoutInflater.from(ctx).inflate(R.layout.eachlight, parent, false);
+        View retView = LayoutInflater.from(ctx).inflate(R.layout.eachlight_v2, parent, false);
         LightsViewHolder holder = new LightsViewHolder(retView);
         return holder;
     }
@@ -52,25 +49,25 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
             holder.devname.setText(lightContainer.getName());
             holder.devstate.setChecked(lightContainer.isState());
             if(lightContainer.isState()){
-                holder.light.setImageResource(R.drawable.light_bulb_on);
+                holder.light.setImageResource(R.drawable.mini_light_bulb_on);
             }else{
-                holder.light.setImageResource(R.drawable.light_bulb_off);
+                holder.light.setImageResource(R.drawable.mini_light_bulb_off);
             }
             holder.devstate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(lightContainer.isState()){
-                        holder.light.setImageResource(R.drawable.light_bulb_turn_off);
+                        holder.light.setImageResource(R.drawable.mini_light_bulb_turn_off);
                     }else{
-                        holder.light.setImageResource(R.drawable.light_bulb_turn_on);
+                        holder.light.setImageResource(R.drawable.mini_light_bulb_turn_on);
                     }
                     runExec(lightContainer);
                 }
             });
         }else{
             holder.devname.setText(lightContainer.getName());
-            holder.devstate.setBackgroundResource(R.drawable.toggleconfigbutton);
-            holder.light.setImageResource(R.drawable.light_bulb_off);
+            holder.devstate.setBackgroundResource(R.drawable.togglebuttonoff);
+            holder.light.setImageResource(R.drawable.mini_light_bulb_off);
             holder.devstate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
