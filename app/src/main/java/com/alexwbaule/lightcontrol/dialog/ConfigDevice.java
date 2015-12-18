@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.alexwbaule.lightcontrol.LightControl;
 import com.alexwbaule.lightcontrol.R;
@@ -44,6 +45,8 @@ public class ConfigDevice extends DialogFragment {
 
         View myView = getActivity().getLayoutInflater().inflate(R.layout.config_wifi, null);
 
+        ListView cc = (ListView) myView.findViewById(R.id.wifi_list);
+        cc.requestFocus();
 
         AlertDialog.Builder b = new AlertDialog.Builder(getActivity())
                 .setTitle("Configurações de Wifi ("+ name +")")

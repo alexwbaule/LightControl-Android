@@ -46,7 +46,6 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
         final LightContainer lightContainer = lightContainers.get(position);
 
         if (lightContainer.isConfig()) {
-            holder.devname.setText(lightContainer.getName());
             holder.devstate.setChecked(lightContainer.isState());
             if(lightContainer.isState()){
                 holder.light.setImageResource(R.drawable.mini_light_bulb_on);
@@ -65,21 +64,21 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
                 }
             });
         }else{
-            holder.devname.setText(lightContainer.getName());
             holder.devstate.setBackgroundResource(R.drawable.togglebuttonoff);
             holder.light.setImageResource(R.drawable.mini_light_bulb_off);
-            holder.devstate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString(LightControl.NAME, lightContainer.getUnique_name());
-                    bundle.putString(LightControl.ADDR, lightContainer.getAdrress());
-                    ConfigDevice exportFragment = new ConfigDevice();
-                    exportFragment.setArguments(bundle);
-                    exportFragment.show(fragmentManager, "export");
-                }
-            });
         }
+        holder.devname.setText(lightContainer.getName());
+        holder.devconfig.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString(LightControl.NAME, lightContainer.getUnique_name());
+                bundle.putString(LightControl.ADDR, lightContainer.getAdrress());
+                ConfigDevice exportFragment = new ConfigDevice();
+                exportFragment.setArguments(bundle);
+                exportFragment.show(fragmentManager, "export");
+            }
+        });
     }
     private void runExec(LightContainer lightContainer){
         new ControlLights(this).execute(lightContainer);
@@ -113,11 +112,13 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     public class LightsViewHolder extends RecyclerView.ViewHolder{
         TextView devname;
         ToggleButton devstate;
+        ToggleButton devconfig;
         ImageView light;
 
         public LightsViewHolder(View itemView) {
             super(itemView);
             devname = (TextView) itemView.findViewById(R.id.devname);
+            devconfig = (ToggleButton) itemView.findViewById(R.id.config);
             devstate = (ToggleButton) itemView.findViewById(R.id.devstate);
             light = (ImageView) itemView.findViewById(R.id.imageView);
         }
