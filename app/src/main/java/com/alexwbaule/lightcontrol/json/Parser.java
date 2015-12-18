@@ -1,8 +1,13 @@
 package com.alexwbaule.lightcontrol.json;
 
 import com.alexwbaule.lightcontrol.container.LightContainer;
+import com.alexwbaule.lightcontrol.container.WifiEntry;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * Created by alex on 12/12/15.
@@ -11,10 +16,12 @@ public class Parser {
     private static final String CONFIG = "config";
     private static final String NAME = "name";
     private static final String STATE = "state";
+    private static final String SSIDS = "apssid";
+
 
     public static LightContainer parseJSON(JSONObject response, boolean isstate) {
-        LightContainer lc;
-        lc = new LightContainer();
+        LightContainer lc = new LightContainer();
+
         if (response != null && response.length() > 0) {
             try {
                 if(contains(response, CONFIG)){
@@ -34,6 +41,27 @@ public class Parser {
             lc.setConfig(true);
         }
         return lc;
+    }
+
+    public static ArrayList<WifiEntry> parseWifiJSON(JSONObject response){
+        ArrayList<WifiEntry> wifiEntries = new ArrayList<>();
+        if (response != null && response.length() > 0) {
+            try {
+                if(contains(response, SSIDS)){
+                    JSONArray obj = response.getJSONArray(SSIDS);
+                    for (int i = 0; i < obj.length(); i++) {
+                        JSONObject wifi = obj.getJSONObject(i);
+                        String name = wifi.getString("ssid");
+                        String mac = wifi.getString("mac");
+                        String signal = wifi.getString("signal");
+                        wifiEntries.add(new WifiEntry(name,mac,signal));
+                    }
+                }
+            } catch (JSONException e) {
+
+            }
+        }
+        return wifiEntries;
     }
 
     public static boolean contains(JSONObject jsonObject, String key) {

@@ -1,5 +1,6 @@
 package com.alexwbaule.lightcontrol.json;
 
+import com.alexwbaule.lightcontrol.Logger;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -27,8 +28,11 @@ public class Requestor {
         try {
             response = requestFuture.get(30000, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
+            Logger.log("Requestor", "InterruptedException " + e.getMessage());
         } catch (ExecutionException e) {
+            Logger.log("Requestor", "ExecutionException " + e.getMessage());
         } catch (TimeoutException e) {
+            Logger.log("Requestor", "TimeoutException " + e.getMessage());
         }
         return response;
     }

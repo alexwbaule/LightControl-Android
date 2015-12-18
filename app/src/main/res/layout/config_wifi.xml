@@ -54,4 +54,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/device_passwd" />
     </android.support.design.widget.TextInputLayout>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/wifipbar"
+        android:layout_above="@+id/name_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="49dp" />
 </RelativeLayout>

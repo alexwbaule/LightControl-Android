@@ -26,7 +26,6 @@ public class FindNodes extends AsyncTask<DeviceAddr, Void, LightContainer> {
         volleySingleton = VolleySingleton.getInstance();
         requestQueue = volleySingleton.getRequestQueue();
         Logger.log(TAG, "FindNodes Constructor");
-
     }
 
     @Override
