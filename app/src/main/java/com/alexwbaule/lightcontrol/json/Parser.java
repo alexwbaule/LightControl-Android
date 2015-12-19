@@ -17,7 +17,7 @@ public class Parser {
     private static final String NAME = "name";
     private static final String STATE = "state";
     private static final String SSIDS = "apssid";
-
+    private static final String SAVED = "saved";
 
     public static LightContainer parseJSON(JSONObject response, boolean isstate) {
         LightContainer lc = new LightContainer();
@@ -53,7 +53,7 @@ public class Parser {
                         JSONObject wifi = obj.getJSONObject(i);
                         String name = wifi.getString("ssid");
                         String mac = wifi.getString("mac");
-                        String signal = wifi.getString("signal");
+                        int signal = wifi.getInt("signal");
                         wifiEntries.add(new WifiEntry(name,mac,signal));
                     }
                 }
@@ -62,6 +62,21 @@ public class Parser {
             }
         }
         return wifiEntries;
+    }
+
+    public static boolean parseSaveWifiJSON(JSONObject response) {
+        boolean done = false;
+
+        if (response != null && response.length() > 0) {
+            try {
+                if(contains(response, SAVED)){
+                    done = response.getBoolean(SAVED);
+                }
+            } catch (JSONException e) {
+
+            }
+        }
+        return done;
     }
 
     public static boolean contains(JSONObject jsonObject, String key) {

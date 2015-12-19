@@ -14,17 +14,6 @@ public class LightContainer {
     boolean state;
     boolean config;
 
-    public LightContainer(String unique_name, String name, String adrress, boolean state, boolean config) {
-        this.unique_name = unique_name;
-        this.name = name;
-        this.adrress = adrress;
-        this.state = state;
-        this.config = config;
-        statename = LightControl.getInstance().getString(R.string.stateoff);
-        if(state){
-            statename = LightControl.getInstance().getString(R.string.stateon);
-        }
-    }
     public LightContainer(){
 
     }
@@ -76,10 +65,6 @@ public class LightContainer {
 
     public void setConfig(boolean config) {
         this.config = config;
-    }
-
-    public String getStatename() {
-        return statename;
     }
 
     public String getName() {

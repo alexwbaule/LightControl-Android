@@ -13,9 +13,7 @@ public class DeviceAddr {
         this.ipAddr = ipAddr;
         this.port = port;
     }
-    public DeviceAddr(){
 
-    }
     public String getName(){
         return name;
     }

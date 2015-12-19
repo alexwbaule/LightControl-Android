@@ -1,65 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="wrap_content"
-        android:layout_height="160dp"
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
         android:id="@+id/wifi_list"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:paddingLeft="@dimen/padding_lateral"
+        android:paddingRight="@dimen/padding_lateral"
+        android:paddingTop="@dimen/padding_margin_top"/>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/wifi_list"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/name_label"
-        android:text="Nome">
+        android:paddingLeft="@dimen/padding_lateral"
+        android:paddingRight="@dimen/padding_lateral"
+        android:paddingTop="@dimen/padding_margin_top">
         <EditText
+            android:hint="Nome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/device_name" />
+            android:id="@+id/device_name"
+            android:maxLength="25" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ssid_label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/passwd_label"
-        android:text="Senha">
+        android:paddingRight="@dimen/padding_lateral"
+        android:paddingLeft="@dimen/padding_lateral"
+        android:paddingTop="@dimen/padding_margin_top"
+        android:paddingBottom="@dimen/padding">
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/device_ssid"
-        android:inputType="textPassword" />
+        android:hint="SSID" />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/name_label"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:id="@+id/ssid_label"
-        android:text="SSID">
+        android:paddingLeft="@dimen/padding_lateral"
+        android:paddingRight="@dimen/padding_lateral"
+        android:paddingTop="@dimen/padding_margin_top">
     <EditText
+        android:hint="Senha"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/device_passwd" />
+        android:id="@+id/device_passwd"
+        android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
+
+</LinearLayout>
 
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/wifipbar"
-        android:layout_above="@+id/name_label"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="49dp" />
-</RelativeLayout>
+        android:layout_gravity="center" />
+</FrameLayout>

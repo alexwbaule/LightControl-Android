@@ -20,8 +20,7 @@ public class Requestor {
         JSONObject response = null;
         RequestFuture<JSONObject> requestFuture = RequestFuture.newFuture();
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-                url,
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 (String)null, requestFuture, requestFuture);
 
         requestQueue.add(request);

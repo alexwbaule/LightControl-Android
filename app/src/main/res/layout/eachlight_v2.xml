@@ -12,13 +12,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/listspace"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_lateral"
+        android:paddingRight="@dimen/padding_lateral"
+        android:paddingBottom="@dimen/listspace"
+        android:paddingTop="@dimen/padding_margin_top">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/MyListSeparator">
+        style="@style/MyListSeparator"
+        android:paddingLeft="@dimen/padding_lateral"
+        android:paddingRight="@dimen/padding_lateral"
+        android:paddingTop="@dimen/padding_margin_top">
 
         <ImageView
             android:layout_width="wrap_content"
