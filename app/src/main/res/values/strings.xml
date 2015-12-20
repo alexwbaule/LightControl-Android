@@ -1,5 +1,11 @@
 <resources>
-    <string name="app_name">Wifi Light Control</string>
+    <string name="app_name">Light Control</string>
     <string name="stateoff">off</string>
     <string name="stateon">on</string>
+    <string name="action_settings">Procurar devices</string>
+    <plurals name="found_device">
+        <item quantity="one">Encontrado 1 novo device</item>
+        <item quantity="other">Encontrado %d novos device</item>
+    </plurals>
+
 </resources>

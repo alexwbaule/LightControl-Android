@@ -9,7 +9,8 @@ import java.util.ArrayList;
  * Created by alex on 13/12/15.
  */
 public interface LoadNodesListener {
-    void onLoadNodesComplete(LightContainer lgts);
-    void onDiscoveryNode(DeviceAddr deviceAddr);
-    void onStopDiscovery();
+    void onFindNodesComplete(ArrayList<LightContainer> lgts);
+    void onLoadNodesComplete(ArrayList<LightContainer> lgts);
+    void onStopDiscovery(ArrayList<DeviceAddr> deviceAddr);
+    void onResolveService(int id);
 }

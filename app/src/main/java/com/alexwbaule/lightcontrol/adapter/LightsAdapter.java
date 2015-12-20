@@ -2,11 +2,13 @@ package com.alexwbaule.lightcontrol.adapter;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -27,6 +29,7 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     private final Context ctx;
     private final FragmentManager fragmentManager;
     private ArrayList<LightContainer> lightContainers;
+    private AnimationDrawable wifiAnime;
 
     public LightsAdapter(Context ctx, ArrayList<LightContainer> lightContainers, FragmentManager frmt) {
         this.ctx = ctx;
@@ -36,7 +39,7 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
 
     @Override
     public LightsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View retView = LayoutInflater.from(ctx).inflate(R.layout.eachlight_v2, parent, false);
+        View retView = LayoutInflater.from(ctx).inflate(R.layout.eachlight, parent, false);
         LightsViewHolder holder = new LightsViewHolder(retView);
         return holder;
     }
@@ -44,22 +47,22 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     @Override
     public void onBindViewHolder(final LightsAdapter.LightsViewHolder holder, int position) {
         final LightContainer lightContainer = lightContainers.get(position);
-
         if (lightContainer.isConfig()) {
             holder.devstate.setChecked(lightContainer.isState());
             if(lightContainer.isState()){
-                holder.light.setImageResource(R.drawable.mini_light_bulb_on);
+                holder.lightstate.setImageResource(R.drawable.light_bulb_on);
             }else{
-                holder.light.setImageResource(R.drawable.mini_light_bulb_off);
+                holder.lightstate.setImageResource(R.drawable.light_bulb_off);
             }
+
+            holder.light.setImageResource(LightControl.getInstance().getWifiSignalImage(lightContainer.getSignal()));
+
             holder.devstate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(lightContainer.isState()){
-                        holder.light.setImageResource(R.drawable.mini_light_bulb_turn_off);
-                    }else{
-                        holder.light.setImageResource(R.drawable.mini_light_bulb_turn_on);
-                    }
+                    holder.lightstate.setBackgroundResource(R.drawable.animation_light);
+                    wifiAnime = (AnimationDrawable) holder.lightstate.getBackground();
+                    wifiAnime.start();
                     runExec(lightContainer);
                 }
             });
@@ -79,22 +82,20 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
                 exportFragment.show(fragmentManager, "export");
             }
         });
+        holder.lightstate.setBackgroundResource(0);
     }
     private void runExec(LightContainer lightContainer){
         new ControlLights(this).execute(lightContainer);
     }
 
-    public void addData(LightContainer lightContainer){
-        Logger.log("Adapter", "Adicionando: " + lightContainer.getName() + " -> " + lightContainer.getAdrress());
-        if(!lightContainers.contains(lightContainer)) {
-            Logger.log("Adapter", "Nao existe entrada, adicionando.");
-            lightContainers.add(lightContainer);
-            notifyDataSetChanged();
-        }
+    public void addData(ArrayList<LightContainer> lightContainer){
+        Logger.log("Adapter", "Nao existe entrada, adicionando.");
+        cleanData();
+        lightContainers.addAll(lightContainer);
+        notifyDataSetChanged();
     }
     public void cleanData(){
          lightContainers.clear();
-         notifyDataSetChanged();
     }
 
     @Override
@@ -104,6 +105,8 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
 
     @Override
     public void onLightsOk(LightContainer lct) {
+        if (wifiAnime != null)
+            wifiAnime.stop();
         lightContainers.set(lightContainers.indexOf(lct), lct);
         Logger.log("Adapter", "Ok, atualizando item " + lct.toString());
         notifyDataSetChanged();
@@ -112,15 +115,17 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
     public class LightsViewHolder extends RecyclerView.ViewHolder{
         TextView devname;
         ToggleButton devstate;
-        ToggleButton devconfig;
+        ImageButton devconfig;
+        ImageView lightstate;
         ImageView light;
 
         public LightsViewHolder(View itemView) {
             super(itemView);
             devname = (TextView) itemView.findViewById(R.id.devname);
-            devconfig = (ToggleButton) itemView.findViewById(R.id.config);
+            devconfig = (ImageButton) itemView.findViewById(R.id.config);
             devstate = (ToggleButton) itemView.findViewById(R.id.devstate);
-            light = (ImageView) itemView.findViewById(R.id.imageView);
+            lightstate = (ImageView) itemView.findViewById(R.id.lightstate);
+            light = (ImageView) itemView.findViewById(R.id.devsignal);
         }
     }
 }

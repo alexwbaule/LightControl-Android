@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.alexwbaule.lightcontrol.LightControl;
 import com.alexwbaule.lightcontrol.R;
 import com.alexwbaule.lightcontrol.container.WifiEntry;
 
@@ -62,15 +64,7 @@ public class WifiListAdapter extends ArrayAdapter<WifiEntry> {
             name.setText(wifiEntry.getSsid());
             mac.setText(wifiEntry.getMacaddr());
 
-            if (wifiEntry.getSignal() >= -67) {
-                signal.setImageResource(R.drawable.wifi_full);
-            } else if (wifiEntry.getSignal() >= -70) {
-                signal.setImageResource(R.drawable.wifi_3);
-            } else if (wifiEntry.getSignal() >= -80) {
-                signal.setImageResource(R.drawable.wifi_2);
-            } else if (wifiEntry.getSignal() >= -90) {
-                signal.setImageResource(R.drawable.wifi_min);
-            }
+            signal.setImageResource(LightControl.getInstance().getWifiSignalImage(wifiEntry.getSignal()));
         }
         return itemView;
     }

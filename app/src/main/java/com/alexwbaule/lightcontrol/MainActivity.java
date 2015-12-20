@@ -1,78 +1,111 @@
 package com.alexwbaule.lightcontrol;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alexwbaule.lightcontrol.adapter.LightsAdapter;
 import com.alexwbaule.lightcontrol.callback.LoadNodesListener;
 import com.alexwbaule.lightcontrol.container.DeviceAddr;
 import com.alexwbaule.lightcontrol.container.LightContainer;
-import com.alexwbaule.lightcontrol.dns_sd.NsdHelper;
 import com.alexwbaule.lightcontrol.tasks.FindNodes;
+import com.alexwbaule.lightcontrol.tasks.LoadNodes;
+import com.alexwbaule.lightcontrol.tasks.ScanForNodes;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoadNodesListener {
     ArrayList<LightContainer> lightContainers;
-    public static NsdHelper mNsdHelper;
     private LightsAdapter adapter;
-    private ProgressBar pgbar;
-
+    private Snackbar snackbar;
+    private RecyclerView recyclerView;
+    private LightControl app;
     public static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mNsdHelper = new NsdHelper(LightControl.getInstance(), this);
-        mNsdHelper.discoverServices();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        app = LightControl.getInstance();
 
         lightContainers = new ArrayList<>();
-        adapter = new LightsAdapter(LightControl.getInstance(), lightContainers, getFragmentManager());
-        RecyclerView rw = (RecyclerView) findViewById(R.id.lights_list);
-        rw.setLayoutManager(new LinearLayoutManager(this));
-        rw.setAdapter(adapter);
+        lightContainers.addAll(app.getCacheDiscovery());
+        adapter = new LightsAdapter(app, lightContainers, getFragmentManager());
+        recyclerView = (RecyclerView) findViewById(R.id.lights_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
+        new LoadNodes(this).execute(lightContainers);
 
-        pgbar = (ProgressBar) findViewById(R.id.progressBar);
-        pgbar.setIndeterminate(true);
-        pgbar.setContentDescription("Carrregando Devices");
-        pgbar.setVisibility(View.VISIBLE);
+        snackbar = Snackbar.make(recyclerView, "Atualizando lista de devices", Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+    }
+    public void updateSnackBar(final int txt){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getApplicationContext(), getResources().getQuantityString(R.plurals.found_device,txt,txt), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     @Override
-    protected void onDestroy() {
-        mNsdHelper.stopDiscovery();
-        super.onDestroy();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            snackbar = Snackbar.make(recyclerView, "Procurando por novos devices", Snackbar.LENGTH_INDEFINITE);
+            // Changing action button text color
+            View sbView = snackbar.getView();
+            TextView textView = (TextView) sbView.findViewById(android.support.design.R.id.snackbar_text);
+            textView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+
+            snackbar.show();
+            Handler alex = new Handler();
+            alex.postDelayed(new ScanForNodes(this), 15000);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onLoadNodesComplete(LightContainer lgts) {
-        pgbar.setVisibility(View.INVISIBLE);
+    public void onLoadNodesComplete(ArrayList<LightContainer> lgts) {
+        app.SaveCacheDiscovery(lgts);
         adapter.addData(lgts);
+        snackbar.dismiss();
     }
 
     @Override
-    public void onDiscoveryNode(DeviceAddr deviceAddr) {
-        Logger.log(TAG, "Device Discovered: " + deviceAddr.getName() + " -> " + deviceAddr.getIpAddr());
+    public void onFindNodesComplete(ArrayList<LightContainer> lgts) {
+        app.SaveCacheDiscovery(lgts);
+        adapter.addData(lgts);
+        snackbar.dismiss();
+    }
+
+    @Override
+    public void onStopDiscovery(ArrayList<DeviceAddr> deviceAddr) {
         new FindNodes(this).execute(deviceAddr);
     }
 
     @Override
-    public void onStopDiscovery() {
+    public void onResolveService(int id) {
+        updateSnackBar(id);
     }
 }

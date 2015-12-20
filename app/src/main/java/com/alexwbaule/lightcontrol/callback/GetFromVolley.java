@@ -19,6 +19,19 @@ import java.util.ArrayList;
 
 public class GetFromVolley {
     private static final String TAG = "GetFromVolley";
+    public static LightContainer loadallStatus(RequestQueue requestQueue, LightContainer devaddr) {
+        String url = "http://" + devaddr.getAdrress() + "/state";
+        Logger.log(TAG, "URL IS -> " + url);
+        LightContainer lightContainers;
+        JSONObject response = Requestor.requestJSON(requestQueue, url);
+        lightContainers = Parser.parseJSON(response, true);
+        lightContainers.setUnique_name(devaddr.getName());
+        lightContainers.setAdrress(devaddr.getAdrress());
+        if(!lightContainers.isConfig())
+            lightContainers.setName("Sem Nome");
+        return lightContainers;
+    }
+
     public static LightContainer loadallStatus(RequestQueue requestQueue, DeviceAddr devaddr) {
         String url = "http://" + devaddr.getIpAddr() + "/state";
         Logger.log(TAG, "URL IS -> " + url);

@@ -14,6 +14,17 @@ public class DeviceAddr {
         this.port = port;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        DeviceAddr that = (DeviceAddr) o;
+
+        if (name.equals(that.name)) return true;
+        return false;
+    }
+
     public String getName(){
         return name;
     }

@@ -16,4 +16,5 @@
     <dimen name="border_2dp">2dp</dimen>
     <dimen name="fab_elevation">12dp</dimen>
     <dimen name="tiny_font">12sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

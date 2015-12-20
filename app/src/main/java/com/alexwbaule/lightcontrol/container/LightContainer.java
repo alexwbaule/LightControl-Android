@@ -11,8 +11,19 @@ public class LightContainer {
     String name;
     String adrress;
     String statename;
+    int signal;
     boolean state;
     boolean config;
+
+    public LightContainer(String unique_name, String name, String adrress, int sg) {
+        this.unique_name = unique_name;
+        this.name = name;
+        this.adrress = adrress;
+        this.signal = sg;
+        this.statename = LightControl.getInstance().getString(R.string.stateoff);
+        this.state = false;
+        this.config = true;
+    }
 
     public LightContainer(){
 
@@ -49,12 +60,6 @@ public class LightContainer {
         }
     }
 
-    @Override
-    public String toString() {
-        return "unique_name: [" + unique_name + "] name: [" + name + "] addr: [" + adrress +
-                 "] statename : [" + statename + "] state: [" + state + "] config: [" + config + "]";
-    }
-
     public String getUnique_name() {
         return unique_name;
     }
@@ -77,5 +82,13 @@ public class LightContainer {
 
     public boolean isState() {
         return state;
+    }
+
+    public int getSignal() {
+        return signal;
+    }
+
+    public void setSignal(int signal) {
+        this.signal = signal;
     }
 }

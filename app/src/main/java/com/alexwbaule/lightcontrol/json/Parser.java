@@ -2,7 +2,6 @@ package com.alexwbaule.lightcontrol.json;
 
 import com.alexwbaule.lightcontrol.container.LightContainer;
 import com.alexwbaule.lightcontrol.container.WifiEntry;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +17,7 @@ public class Parser {
     private static final String STATE = "state";
     private static final String SSIDS = "apssid";
     private static final String SAVED = "saved";
+    private static final String SIGNAL = "signal";
 
     public static LightContainer parseJSON(JSONObject response, boolean isstate) {
         LightContainer lc = new LightContainer();
@@ -32,6 +32,9 @@ public class Parser {
                 }
                 if(contains(response, STATE)){
                     lc.setState((response.get(STATE).equals("on") ? true : false));
+                }
+                if(contains(response, SIGNAL)){
+                    lc.setSignal(response.getInt(SIGNAL));
                 }
             } catch (JSONException e) {
 

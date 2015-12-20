@@ -18,35 +18,31 @@
         android:paddingBottom="@dimen/listspace"
         android:paddingTop="@dimen/padding_margin_top">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/MyListSeparator"
-        android:paddingLeft="@dimen/padding_lateral"
-        android:paddingRight="@dimen/padding_lateral"
-        android:paddingTop="@dimen/padding_margin_top">
-
-        <ImageView
-            android:layout_width="wrap_content"
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView"
-            android:src="@drawable/mini_light_bulb_off"
-            android:layout_gravity="left|center_vertical" />
+            style="@style/MyListSeparator"
+            android:paddingTop="@dimen/padding_margin_top">
 
-        <ToggleButton
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:background="@drawable/toggleconfigbutton"
-            android:textOn="@null"
-            android:textOff="@null"
-            android:id="@+id/config"
-            android:src="@drawable/light_config"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="right|center_vertical" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/devsignal"
+                android:src="@drawable/wifi_full"
+                android:layout_gravity="left|center_vertical" />
 
-    </FrameLayout>
+            <ImageButton
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="@color/transparent"
+                android:id="@+id/config"
+                android:src="@drawable/light_config"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="right|center_vertical" />
+
+        </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -75,9 +71,19 @@
                 android:textOff="@null"
                 android:id="@+id/devstate"
                 android:layout_gravity="right|center_vertical"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignParentTop="false"
+                android:layout_alignParentRight="false"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/lightstate"
+                android:src="@drawable/mini_light_bulb_on"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/devstate"
+                android:layout_toStartOf="@+id/devstate" />
 
         </RelativeLayout>
     </LinearLayout>
