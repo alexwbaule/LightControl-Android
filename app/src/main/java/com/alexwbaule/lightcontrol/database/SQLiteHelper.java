@@ -16,11 +16,14 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String ADDR = "addr";
     public static final String TYPE = "type";
     public static final String SIGNAL = "signal";
+    public static final String WIFISPOT = "wifispot";
+
 
 
 
     private static final String DATABASE_CREATE = "create table devices " +
             "(_id integer primary key autoincrement, " +
+            "wifispot varchar not null, " +
             "unique_name varchar not null, " +
             "nick_name varchar not null," +
             "addr varchar not null," +

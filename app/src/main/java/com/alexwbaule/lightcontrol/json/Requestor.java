@@ -1,6 +1,7 @@
 package com.alexwbaule.lightcontrol.json;
 
 import com.alexwbaule.lightcontrol.Logger;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -22,7 +23,7 @@ public class Requestor {
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url,
                 (String)null, requestFuture, requestFuture);
-
+        request.setRetryPolicy(new DefaultRetryPolicy(10 * 1000, 1, 1.0f));
         requestQueue.add(request);
         try {
             response = requestFuture.get(30000, TimeUnit.MILLISECONDS);

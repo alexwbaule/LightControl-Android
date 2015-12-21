@@ -2,9 +2,12 @@ package com.alexwbaule.lightcontrol;
 
 import android.app.Application;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 
 import com.alexwbaule.lightcontrol.container.LightContainer;
 import com.alexwbaule.lightcontrol.database.SQLiteHelper;
@@ -49,7 +52,9 @@ public class LightControl extends Application {
     }
 
     public int getWifiSignalImage(int signal){
-        if (signal >= -67) {
+        if (signal == 0){
+            return R.drawable.wifi_nosignal;
+        } else if (signal >= -67) {
             return R.drawable.wifi_full;
         } else if (signal >= -70) {
             return R.drawable.wifi_3;
@@ -62,19 +67,27 @@ public class LightControl extends Application {
     }
 
     public void SaveCacheDiscovery(ArrayList<LightContainer> lista){
+        WifiManager wifi = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+
+        WifiInfo w =  wifi.getConnectionInfo();
+        String spot = w.getSSID();
+
         database.delete(SQLiteHelper.TABLE_NAME, null,null);
         for (LightContainer lgts : lista) {
-            ContentValues values = new ContentValues();
+            if(lgts.isConfig()) {
+                ContentValues values = new ContentValues();
 
-            values.put(SQLiteHelper.UNIQUE_NAME, lgts.getUnique_name());
-            values.put(SQLiteHelper.NICK_NAME, lgts.getName());
-            values.put(SQLiteHelper.ADDR, lgts.getAdrress());
-            values.put(SQLiteHelper.SIGNAL, lgts.getSignal());
-            values.put(SQLiteHelper.TYPE, "light");
+                values.put(SQLiteHelper.UNIQUE_NAME, lgts.getUnique_name());
+                values.put(SQLiteHelper.NICK_NAME, lgts.getName());
+                values.put(SQLiteHelper.ADDR, lgts.getAdrress());
+                values.put(SQLiteHelper.SIGNAL, lgts.getSignal());
+                values.put(SQLiteHelper.WIFISPOT, spot);
+                values.put(SQLiteHelper.TYPE, "light");
 
-            try {
-                database.insertOrThrow(SQLiteHelper.TABLE_NAME, null, values);
-            } catch (SQLiteConstraintException e) {
+                try {
+                    database.insertOrThrow(SQLiteHelper.TABLE_NAME, null, values);
+                } catch (SQLiteConstraintException e) {
+                }
             }
         }
     }

@@ -12,9 +12,11 @@ import com.alexwbaule.lightcontrol.LightControl;
 public class VolleySingleton {
     private static VolleySingleton sInstance=null;
     private RequestQueue mRequestQueue;
+
     private VolleySingleton(){
         mRequestQueue=Volley.newRequestQueue(LightControl.getInstance());
     }
+
     public static VolleySingleton getInstance(){
         if(sInstance==null)
         {
@@ -22,6 +24,7 @@ public class VolleySingleton {
         }
         return sInstance;
     }
+
     public RequestQueue getRequestQueue(){
         return mRequestQueue;
     }

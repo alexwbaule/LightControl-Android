@@ -24,9 +24,15 @@ public class GetFromVolley {
         Logger.log(TAG, "URL IS -> " + url);
         LightContainer lightContainers;
         JSONObject response = Requestor.requestJSON(requestQueue, url);
-        lightContainers = Parser.parseJSON(response, true);
+        lightContainers = Parser.parseJSON(response, false);
+        if(response == null){
+            lightContainers.setName(devaddr.getName());
+            lightContainers.setSignal(0);
+            lightContainers.setState(false);
+        }
         lightContainers.setUnique_name(devaddr.getName());
         lightContainers.setAdrress(devaddr.getAdrress());
+
         if(!lightContainers.isConfig())
             lightContainers.setName("Sem Nome");
         return lightContainers;

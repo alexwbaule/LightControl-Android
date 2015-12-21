@@ -54,7 +54,6 @@ public class LightsAdapter extends RecyclerView.Adapter<LightsAdapter.LightsView
             }else{
                 holder.lightstate.setImageResource(R.drawable.light_bulb_off);
             }
-
             holder.light.setImageResource(LightControl.getInstance().getWifiSignalImage(lightContainer.getSignal()));
 
             holder.devstate.setOnClickListener(new View.OnClickListener() {
