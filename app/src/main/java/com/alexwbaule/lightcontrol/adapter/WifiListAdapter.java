@@ -69,6 +69,13 @@ public class WifiListAdapter extends ArrayAdapter<WifiEntry> {
         return itemView;
     }
 
+    public void relodingData(){
+        wifiEntries.clear();
+        wifiEntries.add(new WifiEntry(null, null, 0));
+        reload = false;
+        notifyDataSetChanged();
+    }
+
     public void replaceData(ArrayList<WifiEntry> wifiEnt){
         //wifiEntries.clear();
         wifiEntries.addAll(wifiEnt);

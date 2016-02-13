@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,11 +25,12 @@ import com.alexwbaule.lightcontrol.tasks.ScanForNodes;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements LoadNodesListener {
+public class MainActivity extends AppCompatActivity implements LoadNodesListener, SwipeRefreshLayout.OnRefreshListener {
     ArrayList<LightContainer> lightContainers;
     private LightsAdapter adapter;
     private Snackbar snackbar;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout refreshLayout;
     private LightControl app;
     public static final String TAG = "MainActivity";
 
@@ -47,11 +49,27 @@ public class MainActivity extends AppCompatActivity implements LoadNodesListener
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
+        refreshLayout.setOnRefreshListener(this);
+
+        refreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+
         new LoadNodes(this).execute(lightContainers);
 
         snackbar = Snackbar.make(recyclerView, "Atualizando lista de devices", Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
     }
+
+    @Override
+    public void onRefresh() {
+        new LoadNodes(this).execute(lightContainers);
+    }
+
+
     public void updateSnackBar(final int txt){
         runOnUiThread(new Runnable() {
             @Override
@@ -90,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements LoadNodesListener
         app.SaveCacheDiscovery(lgts);
         adapter.addData(lgts);
         snackbar.dismiss();
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -108,4 +127,6 @@ public class MainActivity extends AppCompatActivity implements LoadNodesListener
     public void onResolveService(int id) {
         updateSnackBar(id);
     }
+
+
 }

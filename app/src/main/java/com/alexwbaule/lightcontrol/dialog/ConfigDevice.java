@@ -58,6 +58,21 @@ public class ConfigDevice extends DialogFragment implements WifiLoadListener{
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        final AlertDialog dialog = (AlertDialog)getDialog();
+        if(dialog != null) {
+
+            dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    refreshList();
+                }
+            });
+        }
+    }
+
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         adapter = new WifiListAdapter(getActivity(),0, new ArrayList<WifiEntry>());
 
@@ -98,20 +113,29 @@ public class ConfigDevice extends DialogFragment implements WifiLoadListener{
         new FindWifiList(this).execute(addr);
 
 
-        AlertDialog.Builder b = new AlertDialog.Builder(getActivity())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setCustomTitle(myHeader)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        this.doPositiveClick();
-                        new SaveWifiConf().execute(new WifiConf(addr,devname.getText().toString(), ssid.getText().toString(), passwd.getText().toString()));
-                    }
+                .setNeutralButton("Refresh", clickListener)
+                .setPositiveButton("OK", clickListener);
+        builder.setView(myView);
+        return builder.create();
+    }
 
-                    private void doPositiveClick() {
+    private DialogInterface.OnClickListener clickListener = new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case DialogInterface.BUTTON_POSITIVE:
+                    new SaveWifiConf().execute(new WifiConf(addr, devname.getText().toString(), ssid.getText().toString(), passwd.getText().toString()));
+                    break;
+            }
+        }
+    };
 
-                    }
-                });
-        b.setView(myView);
-        return b.create();
+    private void refreshList(){
+        pgbar.setVisibility(View.VISIBLE);
+        adapter.relodingData();
+        new FindWifiList(this).execute(addr);
     }
 
     @Override
